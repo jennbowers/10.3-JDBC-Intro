@@ -1,6 +1,7 @@
 package com.jennbowers.helpers;
 
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -27,4 +28,13 @@ public class DatabaseManager {
     public void dropStatsTable () throws SQLException{
         statement.executeUpdate("DROP TABLE IF EXISTS stats");
     }
+
+//  select and get all from table and store in a result set... means you can look through and        get     info back one row at a time
+    public ResultSet findAll(String table) throws SQLException {
+        String formattedSql = String.format("SELECT * FROM %s", table);
+        ResultSet rs = statement.executeQuery(formattedSql);
+        return rs;
+    }
+
+
 }
