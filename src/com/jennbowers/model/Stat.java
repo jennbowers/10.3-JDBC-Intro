@@ -62,6 +62,35 @@ public class Stat {
         return tempCollection;
     }
 
+//    THIS WAY JUST OVERLOADS AND CALLS FIND ALL WITHIN FIND BY NAME... Better readability?
+//    public static Stat findByName(DatabaseManager dbm, String name) throws SQLException {
+//        List<Stat> tempCollection = findAll(dbm);
+//        for (Stat stat: tempCollection){
+//            if (stat.name.equals(name)) {
+//                System.out.println(stat);
+//                return stat;
+//            }
+//        }
+//        System.out.println("I'm sorry, that player is not in our system...");
+//        return null;
+//    }
+
+//    ALTERNATE WAY THAT DID A FIND BY NAME WITH SQL IN THE DBM... faster?
+    public static List<Stat> findByName(DatabaseManager dbm, String name) throws SQLException {
+
+        ResultSet rs= dbm.findByName("stats", name);
+        List<Stat> tempNameCollection = new ArrayList<>();
+        Statement tempNameStatement = dbm.getStatement();
+
+        String nameInTable = rs.getString("name");
+        int wins = rs.getInt("wins");
+        int losses = rs.getInt("losses");
+        Stat tempNameStat = new Stat(nameInTable, wins, losses, tempNameStatement, rs.getInt("id"));
+        tempNameCollection.add(tempNameStat);
+        System.out.println(tempNameCollection.toString());
+        return tempNameCollection;
+    }
+
     public void setName(String name) {
         this.name = name;
     }

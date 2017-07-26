@@ -14,7 +14,8 @@ public class Main {
 
 //      opens a connection to a database if it already exists or creates a database called stats and             connecting to it
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:stats.db")) {
-            welcomeMenu();
+            DatabaseManager dbm = new DatabaseManager(connection);
+            welcomeMenu(dbm);
 
         } catch (SQLException ex) {
             System.out.println("Something went wrong with your DB connection.");
@@ -23,7 +24,7 @@ public class Main {
 
     }
 
-    public static void welcomeMenu() {
+    public static void welcomeMenu(DatabaseManager dbm) throws SQLException{
         System.out.println("-----------------------------------------------------------");
         System.out.println("Welcome to Stat Database 3000, what would you like to do?");
         System.out.println("1) Show all stats");
@@ -37,17 +38,31 @@ public class Main {
         switch(choice) {
             case 1:
                 System.out.println("Now showing all stat data");
+                List<Stat> results = Stat.findAll(dbm);
+                for (Stat stat: results) {
+                    System.out.println(stat);
+                }
                 break;
             case 2:
-                System.out.println("Tell me some information about your new stat");
+                System.out.println("What is the name of the player?");
+                String name = scanner.next();
+                System.out.println("How many wins do they have?");
+                int wins = scanner.nextInt();
+                System.out.println("How many losses do they have?");
+                int losses = scanner.nextInt();
+
+                new Stat(name, wins, losses, dbm.getStatement()).save();
+
                 break;
             case 3:
                 System.out.println("Which player name would you like to update?");
+                String searchName = scanner.next();
+                Stat.findByName(dbm, searchName);
                 break;
             default:
                 System.out.println("Sorry, invalid input");
         }
 
-        welcomeMenu();
+        welcomeMenu(dbm);
     }
 }

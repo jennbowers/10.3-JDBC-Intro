@@ -36,5 +36,11 @@ public class DatabaseManager {
         return rs;
     }
 
+    public ResultSet findByName(String table, String name) throws SQLException {
+        String formattedSql = String.format("SELECT * FROM %s WHERE NAME = '%s' LIMIT 1", table, name);
+        ResultSet rs = statement.executeQuery(formattedSql);
+        return rs;
+    }
+
 
 }
