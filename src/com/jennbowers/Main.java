@@ -5,6 +5,7 @@ import com.jennbowers.model.Stat;
 
 import java.sql.*;
 import java.util.List;
+import java.util.Scanner;
 
 public class Main {
 
@@ -13,38 +14,40 @@ public class Main {
 
 //      opens a connection to a database if it already exists or creates a database called stats and             connecting to it
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:stats.db")) {
-            DatabaseManager db = new DatabaseManager(connection);
-            db.dropStatsTable();
-            db.createStatsTable();
-            Statement statement = db.getStatement();
-
-//          create new rows
-            Stat joelStat = new Stat ("Peanut", 3, 10, statement);
-            joelStat.save();
-
-            Stat joeMontana = new Stat("Joe Montana", 750, 2, statement);
-            joeMontana.save();
-
-            Stat sarah = new Stat("Sarah Taddei", 100, 10, statement);
-            sarah.save();
-
-//          find all stats and update them
-            List<Stat> results = Stat.findAll(db);
-            for (Stat stat: results) {
-                stat.setWins(0);
-                stat.update();
-            }
-
-//          find all stats and sout them
-            results = Stat.findAll(db);
-            for (Stat stat: results) {
-                System.out.println(stat);
-            }
+            welcomeMenu();
 
         } catch (SQLException ex) {
             System.out.println("Something went wrong with your DB connection.");
             ex.printStackTrace();
         }
 
+    }
+
+    public static void welcomeMenu() {
+        System.out.println("-----------------------------------------------------------");
+        System.out.println("Welcome to Stat Database 3000, what would you like to do?");
+        System.out.println("1) Show all stats");
+        System.out.println("2) Add a new stat");
+        System.out.println("3) Update an existing stat");
+        System.out.println("-----------------------------------------------------------");
+
+        Scanner scanner = new Scanner(System.in);
+        int choice = scanner.nextInt();
+
+        switch(choice) {
+            case 1:
+                System.out.println("Now showing all stat data");
+                break;
+            case 2:
+                System.out.println("Tell me some information about your new stat");
+                break;
+            case 3:
+                System.out.println("Which player name would you like to update?");
+                break;
+            default:
+                System.out.println("Sorry, invalid input");
+        }
+
+        welcomeMenu();
     }
 }
