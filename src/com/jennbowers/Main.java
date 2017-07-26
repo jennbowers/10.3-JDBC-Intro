@@ -1,6 +1,7 @@
 package com.jennbowers;
 
 import com.jennbowers.helpers.DatabaseManager;
+import com.jennbowers.model.Stat;
 
 import java.sql.*;
 
@@ -14,19 +15,24 @@ public class Main {
             DatabaseManager db = new DatabaseManager(connection);
             db.dropStatsTable();
             db.createStatsTable();
-            Statement statement = connection.createStatement();
+            Statement statement = db.getStatement();
 
-//            insert values into table
-            statement.executeUpdate("INSERT INTO stats (name, wins, losses) VALUES ('Jenn', 10, 2)");
-//            select and get all from table and store in a result set... means you can look through and get info back one row at a time
+            Stat joelStat = new Stat ("Peanut", 3, 10, statement);
+            joelStat.save();
+
+            Stat joeMontana = new Stat("Joe Montana", 750, 2, statement);
+            joeMontana.save();
+
+//          select and get all from table and store in a result set... means you can look through and                get info back one row at a time
             ResultSet rs = statement.executeQuery("SELECT * FROM stats");
-//            iterates through results one row at a time while there is a next row
+
+//          iterates through results one row at a time while there is a next row
             while(rs.next()) {
-//                assigned what you are getting back for each column to a variable
+//            assigned what you are getting back for each column to a variable
               String name = rs.getString("name");
               int wins = rs.getInt("wins");
               int losses = rs.getInt("losses");
-//              prints variables for name, wins and losses
+//            prints variables for name, wins and losses
               System.out.printf("%s %s %s", name, wins, losses);
             }
 
